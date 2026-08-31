@@ -15,10 +15,13 @@
 
 ### What is this project?
 
-FateUnlimitedCodesRecomp is a Windows-native port of the PSP version of
-*Fate/unlimited codes*, built through static recompilation. It is not a PSP
-emulator and it does not include the game. The user generates a private local
-build from a lawfully obtained copy.
+FateUnlimitedCodesRecomp is a hybrid native Windows version of
+*Fate/unlimited codes*. It uses the PSP release as its static-recompilation and
+gameplay base, with the project direction of combining it with the
+higher-detail PS2 assets and PS2-style controls. The current public build
+establishes the PSP base; PS2 asset replacement is in progress and PS2 controls
+remain planned. It is not a PSP emulator and it does not include the game. The
+user generates a private local build from a lawfully obtained copy.
 
 The project uses a version of **PSPRecomp modified specifically for
 FateUnlimitedCodesRecomp**. PPSSPP is used only as a user-supplied preparation
@@ -118,10 +121,14 @@ separate rights review. See `LEGAL.md` for the canonical scope.
 
 ### ¿Qué es este proyecto?
 
-FateUnlimitedCodesRecomp es un port nativo para Windows de la versión PSP de
-*Fate/unlimited codes*, construido mediante recompilación estática. No es un
-emulador de PSP y no incluye el juego. El usuario genera una compilación local
-privada desde una copia obtenida legalmente.
+FateUnlimitedCodesRecomp es una versión híbrida nativa para Windows de
+*Fate/unlimited codes*. Usa la edición de PSP como base de recompilación
+estática y jugabilidad, con la dirección de combinarla con los assets de mayor
+detalle de PS2 y controles al estilo de PS2. La compilación pública actual
+establece la base PSP; el cambio a assets de PS2 está en progreso y los
+controles de PS2 permanecen en planeación. No es un emulador de PSP y no incluye
+el juego. El usuario genera una compilación local privada desde una copia
+obtenida legalmente.
 
 El proyecto utiliza una versión de **PSPRecomp modificada específicamente para
 FateUnlimitedCodesRecomp**. PPSSPP se usa únicamente como herramienta de
@@ -225,10 +232,14 @@ derechos independiente. Consulta `LEGAL.md` para el alcance canónico.
 
 ### O que é este projeto?
 
-FateUnlimitedCodesRecomp é um port nativo para Windows da versão PSP de
-*Fate/unlimited codes*, construído por recompilação estática. Não é um emulador
-de PSP e não inclui o jogo. O usuário gera uma compilação local privada a partir
-de uma cópia obtida legalmente.
+FateUnlimitedCodesRecomp é uma versão híbrida nativa para Windows de
+*Fate/unlimited codes*. Ela usa a edição de PSP como base de recompilação
+estática e jogabilidade, com a direção de combiná-la com os assets de maior
+detalhe do PS2 e controles no estilo do PS2. A compilação pública atual
+estabelece a base PSP; a substituição por assets do PS2 está em andamento e os
+controles do PS2 permanecem planejados. Não é um emulador de PSP e não inclui o
+jogo. O usuário gera uma compilação local privada a partir de uma cópia obtida
+legalmente.
 
 O projeto utiliza uma versão do **PSPRecomp modificada especificamente para o
 FateUnlimitedCodesRecomp**. O PPSSPP é usado somente como ferramenta de
