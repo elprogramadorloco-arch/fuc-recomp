@@ -1,5 +1,10 @@
 # FateUnlimitedCodesRecomp
 
+> **v0.0.3 FFmpeg download fix / corrección de descarga FFmpeg / correção do
+> download do FFmpeg:** the verified archive SHA-256 is now pinned directly and
+> transient downloads are retried through `curl.exe` with a PowerShell fallback.
+> The build no longer depends on a separate checksum-manifest request.
+
 > **v0.0.2 standalone-build fix / corrección de compilación autónoma / correção
 > da compilação autônoma:** the public package now includes the original PSP
 > native host/HLE sources under `native/`, downloads a pinned SHA-256-verified

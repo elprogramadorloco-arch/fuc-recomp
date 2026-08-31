@@ -7,8 +7,7 @@ $DependencyRoot = Join-Path $PublicRoot 'tools\.build\dependencies\ffmpeg'
 $ArchiveRoot = Join-Path $PublicRoot 'tools\.build\downloads'
 $AssetName = 'ffmpeg-N-126313-g1ae4048218-win64-lgpl-shared.zip'
 $ReleaseBase = 'https://github.com/BtbN/FFmpeg-Builds/releases/download/autobuild-2026-08-29-13-12'
-$ChecksumsName = 'checksums.sha256'
-$ChecksumsSha256 = '3D9D4AAF0D4B1A9CB28F36847680E5C585A71FE29F40E5F948D211E8735BE056'
+$ExpectedArchiveSha256 = '353A95C745D10E52F0E32798D0A72DDE2C1F387D3C22F40EC94BF953ADA5E6FE'
 
 function Find-FfmpegRoot([string]$SearchRoot) {
     $Header = Get-ChildItem -LiteralPath $SearchRoot -Recurse -File -Filter avcodec.h -ErrorAction SilentlyContinue |
@@ -29,10 +28,8 @@ if ($Existing) {
 }
 
 New-Item -ItemType Directory -Force -Path $ArchiveRoot | Out-Null
-$ChecksumsPath = Join-Path $ArchiveRoot $ChecksumsName
 $ArchivePath = Join-Path $ArchiveRoot $AssetName
-$TemporaryChecksumsPath = "$ChecksumsPath.$PID.partial"
-$TemporaryArchivePath = "$ArchivePath.$PID.partial"
+$TemporaryArchivePath = "$ArchivePath.$PID.partial.zip"
 
 function Test-FileSha256([string]$Path, [string]$Expected) {
     if (-not (Test-Path -LiteralPath $Path -PathType Leaf)) { return $false }
@@ -40,30 +37,41 @@ function Test-FileSha256([string]$Path, [string]$Expected) {
     catch [System.IO.IOException] { return $false }
 }
 
-Write-Host 'Downloading the pinned FFmpeg LGPL checksum manifest...'
-try {
-    Invoke-WebRequest -UseBasicParsing -Uri "$ReleaseBase/$ChecksumsName" -OutFile $TemporaryChecksumsPath
-    if ((Get-FileHash -Algorithm SHA256 -LiteralPath $TemporaryChecksumsPath).Hash -ne $ChecksumsSha256) {
-        throw 'The FFmpeg checksum manifest failed its pinned SHA-256 verification.'
+function Invoke-VerifiedDownload([string]$Uri, [string]$Destination, [string]$ExpectedSha256) {
+    $Curl = Get-Command curl.exe -ErrorAction SilentlyContinue
+    $LastFailure = $null
+    $RetryDelays = @(2,5,10)
+    foreach ($Attempt in 1..4) {
+        Remove-Item -LiteralPath $Destination -Force -ErrorAction SilentlyContinue
+        Write-Host "Downloading pinned FFmpeg LGPL package (attempt $Attempt of 4)..."
+        try {
+            if ($Curl) {
+                & $Curl.Source --location --fail --show-error --silent `
+                    --connect-timeout 20 --max-time 300 `
+                    --output $Destination $Uri
+                if ($LASTEXITCODE -ne 0) { throw "curl.exe exited with code $LASTEXITCODE." }
+            } else {
+                [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+                Invoke-WebRequest -UseBasicParsing -Uri $Uri -OutFile $Destination -TimeoutSec 300
+            }
+            if (-not (Test-FileSha256 $Destination $ExpectedSha256)) {
+                throw 'The downloaded FFmpeg archive failed its pinned SHA-256 verification.'
+            }
+            return
+        } catch {
+            $LastFailure = $_.Exception.Message
+            Remove-Item -LiteralPath $Destination -Force -ErrorAction SilentlyContinue
+            if ($Attempt -lt 4) { Start-Sleep -Seconds $RetryDelays[$Attempt - 1] }
+        }
     }
-    $ChecksumLine = Get-Content -LiteralPath $TemporaryChecksumsPath | Where-Object { $_ -match "[ *]$([regex]::Escape($AssetName))$" } | Select-Object -First 1
-} finally {
-    Remove-Item -LiteralPath $TemporaryChecksumsPath -Force -ErrorAction SilentlyContinue
+    throw "Unable to download the pinned FFmpeg LGPL package after 4 attempts. Check the Internet connection, firewall or proxy and run run.bat again. Last error: $LastFailure"
 }
-if (-not $ChecksumLine -or $ChecksumLine -notmatch '^([0-9a-fA-F]{64})') {
-    throw "The pinned FFmpeg asset is absent from $ChecksumsName."
-}
-$ExpectedArchiveSha256 = $Matches[1].ToUpperInvariant()
 
 if (Test-FileSha256 $ArchivePath $ExpectedArchiveSha256) {
     $ArchiveToExtract = $ArchivePath
 } else {
-    Write-Host 'Downloading the pinned Windows x64 FFmpeg LGPL shared development package...'
     try {
-        Invoke-WebRequest -UseBasicParsing -Uri "$ReleaseBase/$AssetName" -OutFile $TemporaryArchivePath
-        if (-not (Test-FileSha256 $TemporaryArchivePath $ExpectedArchiveSha256)) {
-            throw 'The FFmpeg archive failed SHA-256 verification.'
-        }
+        Invoke-VerifiedDownload "$ReleaseBase/$AssetName" $TemporaryArchivePath $ExpectedArchiveSha256
         $ArchiveToExtract = $TemporaryArchivePath
     } catch {
         Remove-Item -LiteralPath $TemporaryArchivePath -Force -ErrorAction SilentlyContinue

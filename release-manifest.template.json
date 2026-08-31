@@ -1,13 +1,13 @@
 {
-  "version": "0.0.2",
-  "notes": "EN: Fixes the standalone build failure from v0.0.1. The package now includes the public PSP native host/HLE sources, downloads a pinned SHA-256-verified FFmpeg LGPL dependency, and creates all build/output folders beside run.bat instead of looking in a private parent repository.\n\nES: Corrige el fallo de compilación autónoma de v0.0.1. El paquete ahora incluye las fuentes públicas del host/HLE nativo PSP, descarga una dependencia FFmpeg LGPL fijada y verificada mediante SHA-256, y crea todas las carpetas de compilación/salida junto a run.bat en vez de buscar un repositorio privado padre.\n\nPT: Corrige a falha da compilação autônoma da v0.0.1. O pacote agora inclui os fontes públicos do host/HLE nativo PSP, baixa uma dependência FFmpeg LGPL fixada e verificada por SHA-256 e cria todas as pastas de compilação/saída ao lado de run.bat, sem procurar um repositório privado pai.",
-  "packageUrl": "https://github.com/elprogramadorloco-arch/fuc-recomp/releases/download/v0.0.2/FateUnlimitedCodesRecomp-update.zip",
+  "version": "0.0.3",
+  "notes": "EN: Fixes FFmpeg setup failures caused by a transient checksum-manifest connection error. The build now pins the verified archive SHA-256 directly, retries the download up to four times, uses curl.exe with PowerShell fallback, and preserves checksum verification. It also synchronizes the hybrid PSP-base plus PS2-assets/controls project description in all three languages.\n\nES: Corrige los fallos de preparación de FFmpeg causados por un error temporal de conexión al manifiesto de checksums. La compilación ahora fija directamente el SHA-256 verificado del ZIP, reintenta la descarga hasta cuatro veces, usa curl.exe con PowerShell como alternativa y conserva la verificación criptográfica. También sincroniza en los tres idiomas la descripción híbrida: base PSP más assets y controles PS2.\n\nPT: Corrige falhas na preparação do FFmpeg causadas por um erro temporário de conexão ao manifesto de checksums. A compilação agora fixa diretamente o SHA-256 verificado do ZIP, tenta o download até quatro vezes, usa curl.exe com PowerShell como alternativa e mantém a verificação criptográfica. Também sincroniza nos três idiomas a descrição híbrida: base PSP com assets e controles do PS2.",
+  "packageUrl": "https://github.com/elprogramadorloco-arch/fuc-recomp/releases/download/v0.0.3/FateUnlimitedCodesRecomp-update.zip",
   "packageSha256": "REPLACE_WITH_UPPERCASE_SHA256",
   "packageSizeBytes": 0,
   "requiredFreeBytes": 536870912,
   "components": {
-    "launcher": true,
-    "runtime": true,
+    "launcher": false,
+    "runtime": false,
     "aot": "reuse"
   }
 }

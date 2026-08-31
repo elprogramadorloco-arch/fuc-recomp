@@ -18,8 +18,10 @@ and release ZIP must never contain those generated folders or any user input.
 
 FFmpeg is not vendored. `tools/ensure_ffmpeg.ps1` downloads a pinned BtbN
 Windows x64 LGPL shared development archive, verifies a pinned checksum
-manifest and the archive with SHA-256, and stages only the required replaceable
-DLLs and license in the user's private output.
+with SHA-256, retries transient network failures through `curl.exe` or
+PowerShell, and stages only the required replaceable DLLs and license in the
+user's private output. The expected archive hash is stored directly in the
+script, so the build does not depend on a second checksum-manifest request.
 
 Before every release, `tools/verify_public_tree.ps1` verifies both the legal
 source-only boundary and the presence of the standalone native source set. The
