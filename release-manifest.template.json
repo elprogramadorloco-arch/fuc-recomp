@@ -1,7 +1,7 @@
 {
-  "version": "0.0.1",
-  "notes": "Describe the changes in this release.",
-  "packageUrl": "https://github.com/elprogramadorloco-arch/fuc-recomp/releases/download/v0.0.1/FateUnlimitedCodesRecomp-update.zip",
+  "version": "0.0.2",
+  "notes": "EN: Fixes the standalone build failure from v0.0.1. The package now includes the public PSP native host/HLE sources, downloads a pinned SHA-256-verified FFmpeg LGPL dependency, and creates all build/output folders beside run.bat instead of looking in a private parent repository.\n\nES: Corrige el fallo de compilación autónoma de v0.0.1. El paquete ahora incluye las fuentes públicas del host/HLE nativo PSP, descarga una dependencia FFmpeg LGPL fijada y verificada mediante SHA-256, y crea todas las carpetas de compilación/salida junto a run.bat en vez de buscar un repositorio privado padre.\n\nPT: Corrige a falha da compilação autônoma da v0.0.1. O pacote agora inclui os fontes públicos do host/HLE nativo PSP, baixa uma dependência FFmpeg LGPL fixada e verificada por SHA-256 e cria todas as pastas de compilação/saída ao lado de run.bat, sem procurar um repositório privado pai.",
+  "packageUrl": "https://github.com/elprogramadorloco-arch/fuc-recomp/releases/download/v0.0.2/FateUnlimitedCodesRecomp-update.zip",
   "packageSha256": "REPLACE_WITH_UPPERCASE_SHA256",
   "packageSizeBytes": 0,
   "requiredFreeBytes": 536870912,

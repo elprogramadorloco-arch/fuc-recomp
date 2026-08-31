@@ -12,7 +12,6 @@ param(
 
 $ErrorActionPreference = 'Stop'
 $PublicRoot = Split-Path -Parent $PSScriptRoot
-$WorkspaceRoot = Split-Path -Parent $PublicRoot
 $SourceData = Join-Path $PublicRoot 'data'
 $OutputRoot = if ($ExistingInstallRoot) { [IO.Path]::GetFullPath($ExistingInstallRoot) } else { Join-Path $PublicRoot 'out' }
 $OutputData = Join-Path $OutputRoot 'data'
@@ -101,8 +100,14 @@ if (-not $SkipCoreBuild) {
         & $Cmake --build $FrameworkBuild --config Release --target psp_recomp psprecomp_core
         if ($LASTEXITCODE -ne 0) { throw 'PSPRecomp build failed.' }
     }
-    $GeneratedRelative = if ($ReuseAotCache) { 'public/out/data/recomp-cache/generated' } else { 'public/tools/.build/generated' }
-    $Generated = Join-Path $WorkspaceRoot $GeneratedRelative
+    # Every generated/private path is rooted beside run.bat. Never derive a
+    # parent workspace and append a literal `public`, because a downloaded
+    # repository may have any directory name.
+    $Generated = if ($ReuseAotCache) {
+        Join-Path $OutputData 'recomp-cache\generated'
+    } else {
+        Join-Path $PublicRoot 'tools\.build\generated'
+    }
     if ($ReuseAotCache -and -not (Get-ChildItem -LiteralPath $Generated -File -Filter '*.cpp' -ErrorAction SilentlyContinue | Select-Object -First 1)) {
         throw 'The private AOT cache is missing; this update must request AOT regeneration.'
     }
@@ -124,12 +129,14 @@ if (-not $SkipCoreBuild) {
         if ($null -eq $PreviousAllLabels) { Remove-Item Env:PSPRECOMP_ALL_LABELS_ENTRIES -ErrorAction SilentlyContinue }
         else { $env:PSPRECOMP_ALL_LABELS_ENTRIES = $PreviousAllLabels }
     }
-    $CoreBuilder = Join-Path $WorkspaceRoot 'tools\recomp\build_psp_host.ps1'
+    $CoreBuilder = Join-Path $PublicRoot 'tools\build_psp_core.ps1'
     if (-not (Test-Path -LiteralPath $CoreBuilder -PathType Leaf)) {
-        throw 'The Fate PSP native support sources are missing. Keep public inside the complete FateUnlimitedCodesRecomp source repository.'
+        throw 'The public native PSP core builder is missing from tools\build_psp_core.ps1.'
     }
     Set-PreparationProgress 78 'Compiling and linking the native PSP core...'
-    & $CoreBuilder -Release -Corpus $GeneratedRelative -WorkDir 'public/out/data/recomp-cache/objects' -Output 'public/out/data/runtime/FateUnlimitedCodesRecompCore.exe'
+    & $CoreBuilder -Release -Corpus $Generated `
+        -WorkDir (Join-Path $OutputData 'recomp-cache\objects') `
+        -Output (Join-Path $OutputData 'runtime\FateUnlimitedCodesRecompCore.exe')
     if ($LASTEXITCODE -ne 0) { throw 'Static core build failed.' }
     Copy-Item -LiteralPath (Join-Path $PublicRoot 'RUNTIME_NOTICE.txt') `
         -Destination (Join-Path $OutputData 'runtime\README.txt') -Force
