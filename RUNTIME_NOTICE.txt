@@ -1,0 +1,14 @@
+FateUnlimitedCodesRecomp - local private output
+================================================
+
+Start the game with ..\..\FateUnlimitedCodesRecomp.exe. Do not start the core
+directly; the launcher passes the prepared data, portable save and input paths.
+
+This directory is generated locally from inputs supplied by the user. The game
+ISO, extracted game data, decrypted EBOOT, AOT corpus and resulting native core
+are not part of the public source distribution and must not be uploaded.
+
+The FFmpeg shared libraries beside the core are used for PSP ATRAC3/PMF media.
+They remain replaceable shared libraries and are covered by the accompanying
+FFmpeg-LICENSE.txt (LGPL). FateUnlimitedCodesRecomp does not claim ownership of
+FFmpeg or of any Fate game content.

@@ -1,0 +1,13 @@
+{
+  "version": "0.0.1",
+  "notes": "Describe the changes in this release.",
+  "packageUrl": "https://github.com/elprogramadorloco-arch/fuc-recomp/releases/download/v0.0.1/FateUnlimitedCodesRecomp-update.zip",
+  "packageSha256": "REPLACE_WITH_UPPERCASE_SHA256",
+  "packageSizeBytes": 0,
+  "requiredFreeBytes": 536870912,
+  "components": {
+    "launcher": true,
+    "runtime": true,
+    "aot": "reuse"
+  }
+}

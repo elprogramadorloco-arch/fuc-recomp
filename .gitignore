@@ -1,0 +1,17 @@
+/tools/.build/
+/out/
+/data/*
+!/data/README.txt
+*.iso
+*.cso
+*.bin
+*.ppst
+*.pgf
+*.zip
+*.exe
+*.dll
+*.lib
+*.obj
+*.pdb
+*.ilk
+FateUnlimitedCodesRecompCore.exe
