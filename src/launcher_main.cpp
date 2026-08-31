@@ -18,7 +18,7 @@
 namespace fs = std::filesystem;
 
 namespace {
-constexpr wchar_t title[] = L"FateUnlimitedCodesRecomp Configuration";
+std::wstring window_title = L"FateUnlimitedCodesRecomp Configuration";
 constexpr UINT wm_check_update = WM_APP + 7;
 constexpr int action_count = 9;
 constexpr std::array<const wchar_t*, action_count> action_names{
@@ -124,6 +124,12 @@ std::wstring read_utf8_text(const fs::path& path) {
                                   int(bytes.size() - offset), result.data(), size);
     while (!result.empty() && (result.back() == L'\r' || result.back() == L'\n')) result.pop_back();
     return result;
+}
+
+std::wstring configured_window_title() {
+    const auto version = read_utf8_text(executable_directory() / L"version.txt");
+    if (version.empty()) return L"FateUnlimitedCodesRecomp Configuration";
+    return L"FateUnlimitedCodesRecomp - v" + version + L" Configuration";
 }
 
 std::optional<fs::path> find_file(const fs::path& root,
@@ -284,7 +290,7 @@ struct App {
         if (ready(&missing)) SetWindowTextW(status, L"Data is prepared. The portable save is stored in save\\.");
         else SetWindowTextW(status, (L"Output is incomplete. Place game.iso, font.zip and ppsspp.zip in data using these exact names, then run run.bat. Missing: " + missing).c_str());
         if (dialog && !missing.empty()) MessageBoxW(window,
-            (L"Data preparation is not complete.\n\nMissing: " + missing).c_str(), title, MB_OK | MB_ICONINFORMATION);
+            (L"Data preparation is not complete.\n\nMissing: " + missing).c_str(), window_title.c_str(), MB_OK | MB_ICONINFORMATION);
     }
 
     void save_config() {
@@ -312,7 +318,7 @@ struct App {
         if (!fs::exists(core)) {
             MessageBoxW(window,
                 L"The locally built recompiled core is not staged in data\\runtime.\n\nFor a legal public package it is deliberately not included. Build it locally from your own decrypted EBOOT, then use tools\\stage_local_core.ps1.",
-                title, MB_OK | MB_ICONINFORMATION); return;
+                window_title.c_str(), MB_OK | MB_ICONINFORMATION); return;
         }
         auto font = find_file(data / L"fonts", {L".pgf"}, L"ltn0");
         const auto iso = fs::exists(data / L"game.iso")
@@ -332,7 +338,7 @@ struct App {
         SetEnvironmentVariableW(L"FUC_WINDOW_SCALE", nullptr);
         SetEnvironmentVariableW(L"FUC_FULLSCREEN", nullptr);
         if (!started)
-            MessageBoxW(window, L"The local recompiled core could not be started.", title, MB_OK | MB_ICONERROR);
+            MessageBoxW(window, L"The local recompiled core could not be started.", window_title.c_str(), MB_OK | MB_ICONERROR);
     }
 
     void check_for_update() {
@@ -506,7 +512,8 @@ int WINAPI wWinMain(HINSTANCE instance, HINSTANCE, PWSTR, int show) {
     wc.hbrBackground = reinterpret_cast<HBRUSH>(COLOR_BTNFACE + 1);
     wc.lpszClassName = L"FateUnlimitedCodesRecompLauncher";
     RegisterClassExW(&wc);
-    const HWND window = CreateWindowExW(0, wc.lpszClassName, title,
+    window_title = configured_window_title();
+    const HWND window = CreateWindowExW(0, wc.lpszClassName, window_title.c_str(),
         WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX,
         CW_USEDEFAULT, CW_USEDEFAULT, 1000, 700, nullptr, nullptr, instance, nullptr);
     if (!window) return 1;

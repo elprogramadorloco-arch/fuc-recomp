@@ -1,12 +1,12 @@
 {
-  "version": "0.0.3",
-  "notes": "EN: Fixes FFmpeg setup failures caused by a transient checksum-manifest connection error. The build now pins the verified archive SHA-256 directly, retries the download up to four times, uses curl.exe with PowerShell fallback, and preserves checksum verification. It also synchronizes the hybrid PSP-base plus PS2-assets/controls project description in all three languages.\n\nES: Corrige los fallos de preparación de FFmpeg causados por un error temporal de conexión al manifiesto de checksums. La compilación ahora fija directamente el SHA-256 verificado del ZIP, reintenta la descarga hasta cuatro veces, usa curl.exe con PowerShell como alternativa y conserva la verificación criptográfica. También sincroniza en los tres idiomas la descripción híbrida: base PSP más assets y controles PS2.\n\nPT: Corrige falhas na preparação do FFmpeg causadas por um erro temporário de conexão ao manifesto de checksums. A compilação agora fixa diretamente o SHA-256 verificado do ZIP, tenta o download até quatro vezes, usa curl.exe com PowerShell como alternativa e mantém a verificação criptográfica. Também sincroniza nos três idiomas a descrição híbrida: base PSP com assets e controles do PS2.",
-  "packageUrl": "https://github.com/elprogramadorloco-arch/fuc-recomp/releases/download/v0.0.3/FateUnlimitedCodesRecomp-update.zip",
+  "version": "0.0.4",
+  "notes": "Test update.bat",
+  "packageUrl": "https://github.com/elprogramadorloco-arch/fuc-recomp/releases/download/v0.0.4/FateUnlimitedCodesRecomp-update.zip",
   "packageSha256": "REPLACE_WITH_UPPERCASE_SHA256",
   "packageSizeBytes": 0,
   "requiredFreeBytes": 536870912,
   "components": {
-    "launcher": false,
+    "launcher": true,
     "runtime": false,
     "aot": "reuse"
   }

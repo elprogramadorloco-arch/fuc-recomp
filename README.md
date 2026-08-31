@@ -1,5 +1,8 @@
 # FateUnlimitedCodesRecomp
 
+> **v0.0.4:** Test `update.bat`. The Configuration window now displays the
+> installed version as `FateUnlimitedCodesRecomp - vx.x.x Configuration`.
+
 > **v0.0.3 FFmpeg download fix / corrección de descarga FFmpeg / correção do
 > download do FFmpeg:** the verified archive SHA-256 is now pinned directly and
 > transient downloads are retried through `curl.exe` with a PowerShell fallback.
