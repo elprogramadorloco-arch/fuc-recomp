@@ -79,6 +79,7 @@ update restores the previous launcher/runtime.
 | --- | --- | --- |
 | Base PSP version | OK | May still contain errors; battle voice gain remains to be corrected. |
 | Replacement with PS2 assets | In progress | Deferred work is integrated only when it does not break the verified PSP base. |
+| Support for more resolutions | Planned | Currently only the native PSP resolution is supported. |
 | PS2 controls and AI implementation | Planned | Design and verification are pending. |
 | Online gameplay | Planned | Network architecture has not been implemented. |
 | Mods: images and textures | Planned | A legal user-provided mod path is planned. |
@@ -188,6 +189,7 @@ runtime anteriores.
 | --- | --- | --- |
 | Versión base PSP | OK | Puede tener algún error; falta corregir la ganancia de las voces en batalla. |
 | Cambio por los assets PS2 | En progreso | Se integrará sin romper la base PSP verificada. |
+| Soporte para más resoluciones | En planeación | Actualmente solo se soporta la resolución nativa de PSP. |
 | Implementación de controles y AI PS2 | En planeación | Falta diseño y verificación. |
 | Implementación de juego en línea | En planeación | La arquitectura de red todavía no está implementada. |
 | Implementación de mods: imágenes y texturas | En planeación | Se planifica una ruta legal con archivos aportados por el usuario. |
@@ -297,6 +299,7 @@ preservados, e uma falha restaura o launcher/runtime anterior.
 | --- | --- | --- |
 | Versão base PSP | OK | Pode conter erros; ainda falta corrigir o ganho das vozes durante as batalhas. |
 | Substituição por assets do PS2 | Em progresso | Será integrada sem quebrar a base PSP verificada. |
+| Suporte para mais resoluções | Planejada | Atualmente, apenas a resolução nativa do PSP é suportada. |
 | Implementação de controles e IA do PS2 | Planejada | Projeto e verificação ainda pendentes. |
 | Implementação de jogo online | Planejada | A arquitetura de rede ainda não foi implementada. |
 | Mods: imagens e texturas | Planejada | Está prevista uma rota legal com arquivos fornecidos pelo usuário. |
