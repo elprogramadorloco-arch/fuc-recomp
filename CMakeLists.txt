@@ -10,6 +10,9 @@ target_link_libraries(FateUnlimitedCodesRecomp PRIVATE comctl32 shell32 xinput9_
 
 if(MSVC)
     target_compile_options(FateUnlimitedCodesRecomp PRIVATE /W4 /permissive- /utf-8)
+elseif(MINGW)
+    target_compile_options(FateUnlimitedCodesRecomp PRIVATE -Wall -Wextra -Wpedantic)
+    target_link_options(FateUnlimitedCodesRecomp PRIVATE -municode -static)
 endif()
 
 set_target_properties(FateUnlimitedCodesRecomp PROPERTIES
@@ -25,6 +28,9 @@ add_executable(FateUnlimitedCodesDataTool
 target_compile_features(FateUnlimitedCodesDataTool PRIVATE cxx_std_20)
 if(MSVC)
     target_compile_options(FateUnlimitedCodesDataTool PRIVATE /W4 /permissive- /utf-8)
+elseif(MINGW)
+    target_compile_options(FateUnlimitedCodesDataTool PRIVATE -Wall -Wextra -Wpedantic)
+    target_link_options(FateUnlimitedCodesDataTool PRIVATE -municode -static)
 endif()
 set_target_properties(FateUnlimitedCodesDataTool PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"

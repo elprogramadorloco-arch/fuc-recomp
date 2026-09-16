@@ -6,6 +6,13 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+# The public pipeline downloads a portable LLVM-MinGW compiler into an ignored
+# cache. Its command-line tools must remain runnable after that directory is
+# moved or cleaned, so do not leave dependencies on libc++.dll/libunwind.dll.
+if(MINGW)
+    add_link_options(-static)
+endif()
+
 option(PSPRECOMP_BUILD_TESTS "Build reusable PSPRecomp tests" ON)
 option(PSPRECOMP_BUILD_PROFILE_TESTS "Build tests supplied by the selected profile" ON)
 set(PSPRECOMP_PROFILE "" CACHE STRING "Profile to build from profiles/<name>; empty builds only the framework")

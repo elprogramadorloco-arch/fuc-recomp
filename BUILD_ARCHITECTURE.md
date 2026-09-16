@@ -23,6 +23,14 @@ PowerShell, and stages only the required replaceable DLLs and license in the
 user's private output. The expected archive hash is stored directly in the
 script, so the build does not depend on a second checksum-manifest request.
 
+Visual Studio is not used by the public build. The scripts select the normal
+system CMake installation (preferring `C:\Program Files\CMake\bin\cmake.exe`)
+and require CMake 3.22 or newer. `tools/ensure_toolchain.ps1` downloads the
+pinned official LLVM-MinGW x64 archive into ignored local build storage,
+verifies its SHA-256, and CMake drives that compiler through the `MinGW
+Makefiles` generator. Neither the compiler archive nor its extracted files are
+published in the repository or source-only release ZIP.
+
 Before every release, `tools/verify_public_tree.ps1` verifies both the legal
 source-only boundary and the presence of the standalone native source set. The
 exact release tree must also be tested from a directory whose name is not

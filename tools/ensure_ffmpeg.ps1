@@ -5,9 +5,9 @@ $ErrorActionPreference = 'Stop'
 $PublicRoot = Split-Path -Parent $PSScriptRoot
 $DependencyRoot = Join-Path $PublicRoot 'tools\.build\dependencies\ffmpeg'
 $ArchiveRoot = Join-Path $PublicRoot 'tools\.build\downloads'
-$AssetName = 'ffmpeg-N-126313-g1ae4048218-win64-lgpl-shared.zip'
-$ReleaseBase = 'https://github.com/BtbN/FFmpeg-Builds/releases/download/autobuild-2026-08-29-13-12'
-$ExpectedArchiveSha256 = '353A95C745D10E52F0E32798D0A72DDE2C1F387D3C22F40EC94BF953ADA5E6FE'
+$AssetName = 'ffmpeg-N-126574-g912208af28-win64-lgpl-shared.zip'
+$ReleaseBase = 'https://github.com/BtbN/FFmpeg-Builds/releases/download/autobuild-2026-09-15-13-18'
+$ExpectedArchiveSha256 = 'D57B4540DEBEBB12F6BAD7D04D7D450FBCE7822E04DDABA6182E2C8FC31955D0'
 
 function Find-FfmpegRoot([string]$SearchRoot) {
     $Header = Get-ChildItem -LiteralPath $SearchRoot -Recurse -File -Filter avcodec.h -ErrorAction SilentlyContinue |

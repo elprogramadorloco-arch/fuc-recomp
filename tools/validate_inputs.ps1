@@ -31,23 +31,6 @@ function Find-SingleFile([string]$Label, [scriptblock]$Predicate) {
     [pscustomobject]@{ Item = $null; File = $Matches[0] }
 }
 
-function Get-CmakeCandidate([string]$VisualStudioPath = '') {
-    $Candidates = @(
-        (Get-Command cmake.exe -ErrorAction SilentlyContinue).Source,
-        $(if ($VisualStudioPath) { Join-Path $VisualStudioPath 'Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe' }),
-        'C:\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe',
-        'C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe',
-        'C:\Program Files\Microsoft Visual Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe',
-        'C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe',
-        'C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe',
-        'C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe',
-        'C:\Program Files\Microsoft Visual Studio\2019\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe',
-        'C:\Program Files\Microsoft Visual Studio\2019\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe',
-        'C:\Program Files\Microsoft Visual Studio\2019\Enterprise\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe'
-    ) | Where-Object { $_ -and (Test-Path -LiteralPath $_ -PathType Leaf) }
-    $Candidates | Select-Object -First 1
-}
-
 function Test-FucPublicInputs {
     [CmdletBinding()]
     param([string]$InputRoot = $DataRoot, [scriptblock]$OnStatus = $StatusAction)
@@ -62,40 +45,16 @@ function Test-FucPublicInputs {
         $Items.Add((New-ValidationItem 'Windows x64' 'Ok' '64-bit Windows detected.'))
     }
 
-    Send-ValidationStatus 'Checking the MSVC-compatible C++ toolchain...'
-    $VsWhere = Join-Path ${env:ProgramFiles(x86)} 'Microsoft Visual Studio\Installer\vswhere.exe'
-    $VsPath = $null
-    if (Test-Path -LiteralPath $VsWhere -PathType Leaf) {
-        $VsPath = & $VsWhere -latest -products * `
-            -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath
-    }
-    if ($VsPath) {
-        $InstallationVersion = & $VsWhere -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationVersion
-        $VsMajor = if ($InstallationVersion -match '^(\d+)\.') { [int]$Matches[1] } else { 0 }
-        $VcVars = Join-Path $VsPath 'VC\Auxiliary\Build\vcvars64.bat'
-        if ($VsMajor -notin @(16,17)) {
-            $Items.Add((New-ValidationItem 'C++ toolchain' 'Invalid' "MSVC installation $InstallationVersion is not supported; use a VS 2019/2022-compatible toolset." $VsPath))
-        } elseif (Test-Path -LiteralPath $VcVars -PathType Leaf) {
-            $Items.Add((New-ValidationItem 'C++ toolchain' 'Ok' "Compatible MSVC x64 toolset detected (installation $InstallationVersion)." $VsPath))
-        } else {
-            $Items.Add((New-ValidationItem 'C++ toolchain' 'Invalid' 'The MSVC x64 environment script is missing.' $VsPath))
-        }
-    } else {
-        $Items.Add((New-ValidationItem 'C++ toolchain' 'Missing' 'Install compatible VS 2019/2022 Build Tools or Visual Studio with the MSVC x64 C++ workload. The full IDE is not required.'))
-    }
-
-    Send-ValidationStatus 'Checking CMake...'
-    $Cmake = Get-CmakeCandidate $VsPath
-    if (-not $Cmake) {
-        $Items.Add((New-ValidationItem 'CMake' 'Missing' 'Install CMake 3.22+ or the CMake tools included with Visual Studio 2022.'))
-    } else {
-        $VersionLine = (& $Cmake --version | Select-Object -First 1)
-        $Version = if ($VersionLine -match '(\d+\.\d+(?:\.\d+)*)') { [version]$Matches[1] } else { $null }
-        if (-not $Version -or $Version -lt [version]'3.22') {
-            $Items.Add((New-ValidationItem 'CMake' 'Invalid' "CMake 3.22+ is required; detected $VersionLine." $Cmake))
-        } else {
-            $Items.Add((New-ValidationItem 'CMake' 'Ok' "CMake $Version detected." $Cmake))
-        }
+    . (Join-Path $PSScriptRoot 'toolchain.ps1')
+    $Toolchain = $null
+    Send-ValidationStatus 'Checking CMake and preparing the portable C++ toolchain...'
+    try {
+        $Toolchain = Get-FucToolchain
+        $Items.Add((New-ValidationItem 'CMake' 'Ok' "CMake $($Toolchain.CmakeVersion) detected." $Toolchain.Cmake))
+        $CompilerVersion = (& $Toolchain.Compiler --version | Select-Object -First 1)
+        $Items.Add((New-ValidationItem 'C++ toolchain' 'Ok' "Pinned portable LLVM-MinGW x64 toolchain ready ($CompilerVersion)." $Toolchain.Root))
+    } catch {
+        $Items.Add((New-ValidationItem 'Build environment' 'Missing' $_.Exception.Message))
     }
 
     Send-ValidationStatus 'Locating data\game.iso...'
@@ -171,7 +130,8 @@ function Test-FucPublicInputs {
         Iso = $Iso
         FontZip = $FontZip
         PpssppZip = $PpssppZip
-        Cmake = $Cmake
+        Cmake = if ($Toolchain) { $Toolchain.Cmake } else { $null }
+        Toolchain = $Toolchain
     }
 }
 

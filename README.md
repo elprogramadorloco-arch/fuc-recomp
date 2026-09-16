@@ -25,10 +25,9 @@ the finished native build.
 
 - 64-bit Windows.
 - CMake 3.22 or newer.
-- A compatible MSVC x64 C++ toolchain from Visual Studio or Build Tools
-  2019/2022. The complete Visual Studio IDE is not required, and Community,
-  Professional, Enterprise and standalone Build Tools installations are
-  accepted when the C++ x64 workload is installed.
+- An Internet connection on the first build. `run.bat` automatically downloads
+  a pinned, SHA-256-verified portable LLVM-MinGW x64 compiler. Visual Studio
+  and Visual Studio Build Tools are not required.
 - The European PSP release of *Fate/unlimited codes*:
   - required filename: `game.iso`;
   - game ID: `NPEH00007`;
@@ -133,10 +132,9 @@ EBOOT descifrado; no es necesario para ejecutar la compilación nativa terminada
 
 - Windows de 64 bits.
 - CMake 3.22 o posterior.
-- Un toolchain C++ MSVC x64 compatible de Visual Studio o Build Tools
-  2019/2022. No es necesario instalar el IDE completo. Se aceptan Community,
-  Professional, Enterprise y Build Tools independientes cuando está instalada
-  la carga de trabajo C++ x64.
+- Conexión a Internet durante la primera compilación. `run.bat` descarga
+  automáticamente un compilador LLVM-MinGW x64 portable, con versión fijada y
+  SHA-256 verificado. No se necesita Visual Studio ni Visual Studio Build Tools.
 - La edición europea para PSP de *Fate/unlimited codes*:
   - nombre de archivo obligatorio: `game.iso`;
   - ID del juego: `NPEH00007`;
@@ -245,9 +243,10 @@ descriptografado; ele não é necessário para executar a compilação nativa fi
 
 - Windows de 64 bits.
 - CMake 3.22 ou mais recente.
-- Um toolchain C++ MSVC x64 compatível do Visual Studio ou Build Tools
-  2019/2022. A IDE completa não é obrigatória. Community, Professional,
-  Enterprise e Build Tools independentes são aceitos com a carga C++ x64.
+- Conexão com a Internet na primeira compilação. O `run.bat` baixa
+  automaticamente um compilador LLVM-MinGW x64 portátil, com versão fixada e
+  SHA-256 verificado. Visual Studio e Visual Studio Build Tools não são
+  necessários.
 - A edição europeia para PSP de *Fate/unlimited codes*:
   - nome de arquivo obrigatório: `game.iso`;
   - ID do jogo: `NPEH00007`;

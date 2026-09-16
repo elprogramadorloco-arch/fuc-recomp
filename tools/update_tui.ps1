@@ -32,15 +32,13 @@ function Show-Update([int]$Percent, [string]$Activity, [string[]]$Lines = @()) {
 }
 
 function Get-BuildEnvironment {
-    $VsWhere = Join-Path ${env:ProgramFiles(x86)} 'Microsoft Visual Studio\Installer\vswhere.exe'
-    $VsPath = if(Test-Path -LiteralPath $VsWhere){ & $VsWhere -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath }
-    $VsVersion = if($VsPath){ & $VsWhere -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationVersion }
-    $Major = if($VsVersion -match '^(\d+)\.'){[int]$Matches[1]}else{0}
-    $CmakeCandidates = @(
-        (Get-Command cmake.exe -ErrorAction SilentlyContinue).Source,
-        $(if($VsPath){Join-Path $VsPath 'Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe'})
-    ) | Where-Object { $_ -and (Test-Path -LiteralPath $_ -PathType Leaf) }
-    [pscustomobject]@{ Valid=($Major -in @(16,17) -and $CmakeCandidates.Count -gt 0); VsPath=$VsPath; Version=$VsVersion; Cmake=($CmakeCandidates|Select-Object -First 1) }
+    try {
+        . (Join-Path $PSScriptRoot 'toolchain.ps1')
+        $Toolchain = Get-FucToolchain
+        [pscustomobject]@{ Valid=$true; Cmake=$Toolchain.Cmake; Compiler=$Toolchain.Compiler; Error='' }
+    } catch {
+        [pscustomobject]@{ Valid=$false; Cmake=$null; Compiler=$null; Error=$_.Exception.Message }
+    }
 }
 
 function Copy-PublicSource([string]$From, [string]$To) {
@@ -79,7 +77,7 @@ try {
 
     Show-Update 16 'Validating the installed build toolchain...'
     $BuildEnvironment = Get-BuildEnvironment
-    if(-not $BuildEnvironment.Valid){throw 'A compatible CMake and MSVC x64 VS/Build Tools 2019/2022 toolchain is required.'}
+    if(-not $BuildEnvironment.Valid){throw "CMake 3.22+ and the verified portable LLVM-MinGW toolchain are required. $($BuildEnvironment.Error)"}
 
     Show-Update 22 'Checking temporary disk space...'
     $RequiredBytes = [int64]$Info.requiredFreeBytes

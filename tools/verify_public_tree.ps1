@@ -6,7 +6,7 @@ if (-not $Root) { $Root = Split-Path -Parent $PSScriptRoot }
 $RootFull = [IO.Path]::GetFullPath($Root).TrimEnd([IO.Path]::DirectorySeparatorChar)
 $ForbiddenExtensions = @(
     '.iso','.cso','.bin','.pgf','.ppst','.zip','.vag','.at3','.pmf','.fpk',
-    '.exe','.dll','.lib','.obj','.pdb','.ilk'
+    '.exe','.dll','.lib','.a','.obj','.pdb','.ilk'
 )
 $Violations = Get-ChildItem -LiteralPath $Root -Recurse -File | Where-Object {
     $Relative = $_.FullName.Substring($RootFull.Length).TrimStart([IO.Path]::DirectorySeparatorChar)

@@ -1,13 +1,13 @@
 {
-  "version": "0.0.4",
-  "notes": "Test update.bat",
-  "packageUrl": "https://github.com/elprogramadorloco-arch/fuc-recomp/releases/download/v0.0.4/FateUnlimitedCodesRecomp-update.zip",
+  "version": "0.0.5",
+  "notes": "English: Visual Studio is no longer required. FateUnlimitedCodesRecomp now builds with CMake and the automatically prepared verified LLVM-MinGW toolchain.\n\nEspañol: Visual Studio ya no es necesario. FateUnlimitedCodesRecomp ahora se compila con CMake y el toolchain LLVM-MinGW verificado que se prepara automáticamente.\n\nPortuguês: O Visual Studio não é mais necessário. FateUnlimitedCodesRecomp agora é compilado com CMake e o toolchain LLVM-MinGW verificado, preparado automaticamente.",
+  "packageUrl": "https://github.com/elprogramadorloco-arch/fuc-recomp/releases/download/v0.0.5/FateUnlimitedCodesRecomp-update.zip",
   "packageSha256": "REPLACE_WITH_UPPERCASE_SHA256",
   "packageSizeBytes": 0,
   "requiredFreeBytes": 536870912,
   "components": {
     "launcher": true,
-    "runtime": false,
+    "runtime": true,
     "aot": "reuse"
   }
 }

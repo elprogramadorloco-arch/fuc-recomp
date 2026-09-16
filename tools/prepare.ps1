@@ -70,35 +70,13 @@ if ($EbootSha256 -ne $ExpectedEbootSha256) {
 
 if (-not $SkipCoreBuild) {
     $FrameworkBuild = Join-Path $PublicRoot 'tools\.build\psprecomp'
-    $FrameworkRecompiler = Join-Path $FrameworkBuild 'Release\psp_recomp.exe'
-    if (-not $ReuseAotCache -and -not (Test-Path -LiteralPath $FrameworkRecompiler -PathType Leaf)) {
+    $FrameworkRecompiler = Join-Path $FrameworkBuild 'psp_recomp.exe'
+    $FrameworkCore = Join-Path $FrameworkBuild 'libpsprecomp_core.a'
+    $NeedsFrameworkBuild = -not (Test-Path -LiteralPath $FrameworkCore -PathType Leaf) -or
+        (-not $ReuseAotCache -and -not (Test-Path -LiteralPath $FrameworkRecompiler -PathType Leaf))
+    if ($NeedsFrameworkBuild) {
         Set-PreparationProgress 50 'Building PSPRecomp...'
-        $VsWhere = Join-Path ${env:ProgramFiles(x86)} 'Microsoft Visual Studio\Installer\vswhere.exe'
-        $VsPath = if (Test-Path -LiteralPath $VsWhere -PathType Leaf) {
-            & $VsWhere -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath
-        }
-        $VsVersion = if ($VsPath) {
-            & $VsWhere -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationVersion
-        }
-        $VsMajor = if ($VsVersion -match '^(\d+)\.') { [int]$Matches[1] } else { 0 }
-        $Generator = switch ($VsMajor) {
-            17 { 'Visual Studio 17 2022' }
-            16 { 'Visual Studio 16 2019' }
-            default { $null }
-        }
-        if (-not $Generator) { throw 'A compatible Visual Studio/Build Tools 2019 or 2022 MSVC x64 toolchain was not found.' }
-        $CmakeCandidates = @(
-            (Get-Command cmake.exe -ErrorAction SilentlyContinue).Source,
-            (Join-Path $VsPath 'Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe'),
-            'E:\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe',
-            'C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe'
-        ) | Where-Object { $_ -and (Test-Path -LiteralPath $_) }
-        $Cmake = $CmakeCandidates | Select-Object -First 1
-        if (-not $Cmake) { throw 'CMake was not found.' }
-        & $Cmake -S (Join-Path $PublicRoot 'PSPRecomp') -B $FrameworkBuild -G $Generator -A x64 '-DPSPRECOMP_PROFILE='
-        if ($LASTEXITCODE -ne 0) { throw 'PSPRecomp configuration failed.' }
-        & $Cmake --build $FrameworkBuild --config Release --target psp_recomp psprecomp_core
-        if ($LASTEXITCODE -ne 0) { throw 'PSPRecomp build failed.' }
+        & (Join-Path $PSScriptRoot 'build_psprecomp.ps1') | Out-Host
     }
     # Every generated/private path is rooted beside run.bat. Never derive a
     # parent workspace and append a literal `public`, because a downloaded
