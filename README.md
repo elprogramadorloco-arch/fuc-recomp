@@ -6,6 +6,18 @@
 
 ## English
 
+### Development status
+
+Work is underway on the PS2 version of *Fate/unlimited codes* to use it as
+the project's new base. Ports for **Android, PS4, PS5, PS Vita and Linux**
+are also in development, alongside the **editor**.
+
+These developments are not included in the current public version. They will
+be uploaded to this repository only when everything is ready. Until then, the
+public version and the instructions below remain based on the PSP release for
+Windows. This announcement does not mean that the ports or editor are already
+available to download.
+
 ### What is this project?
 
 FateUnlimitedCodesRecomp is a hybrid native Windows version of
@@ -111,6 +123,18 @@ separate rights review. See `LEGAL.md` for the canonical scope.
 ---
 
 ## Español
+
+### Estado del desarrollo
+
+Se está trabajando en la versión de PS2 de *Fate/unlimited codes* para
+utilizarla como nueva base del proyecto. También se está trabajando en ports
+para **Android, PS4, PS5, PS Vita y Linux**, además del **editor**.
+
+Estos desarrollos todavía no forman parte de la versión pública actual. Se
+subirán a este repositorio únicamente cuando todo esté listo. Mientras tanto,
+la versión pública y las instrucciones siguientes siguen correspondiendo a
+la base PSP para Windows. Este anuncio no significa que los ports o el editor
+ya estén disponibles para descargar.
 
 ### ¿Qué es este proyecto?
 
@@ -222,6 +246,18 @@ derechos independiente. Consulta `LEGAL.md` para el alcance canónico.
 ---
 
 ## Português
+
+### Estado do desenvolvimento
+
+Está em desenvolvimento a versão de PS2 de *Fate/unlimited codes* para ser
+usada como a nova base do projeto. Também estão em desenvolvimento ports para
+**Android, PS4, PS5, PS Vita e Linux**, além do **editor**.
+
+Esses desenvolvimentos ainda não fazem parte da versão pública atual. Eles
+serão enviados a este repositório somente quando tudo estiver pronto. Até lá,
+a versão pública e as instruções abaixo continuam correspondendo à base PSP
+para Windows. Este anúncio não significa que os ports ou o editor já estejam
+disponíveis para download.
 
 ### O que é este projeto?
 
